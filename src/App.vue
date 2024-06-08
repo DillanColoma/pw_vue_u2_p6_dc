@@ -1,9 +1,9 @@
 <template>
 
   <img src="./assets/logo.png" alt="NONE">
-  <Contador titulo="Estudiante"/>   <!---[3]-->
-  <Contador titulo="Profesor"/>
-  <Contador />
+  <Contador titulo="Estudiante" :num="1"/>   <!---[3]-->
+  <Contador titulo="Profesor" />
+  <Contador :num="calcularValor()"/>
   
   
   
@@ -19,6 +19,11 @@
     components: {
       Contador  /*[2]*/ 
   
+    },
+    methods:{
+      calcularValor(){
+        return 10+2;
+      }
     }
   }
   </script>

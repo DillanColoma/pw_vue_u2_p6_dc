@@ -20,11 +20,24 @@
   }*/
   export default{
   
-    props:["titulo","propN"],
+    //props:["titulo","num"], Forma básica de declarar un prop.
+    props:{
+      titulo:  String,
+      num: {
+        type: Number,
+        required:false, //Este siempre va
+        default:10,
+        validator(value){
+          ///////Toda la porgramación
+          return  value>0;
+
+        }
+      }
+    },
     data(){
       return{
         /*propiedades reactivas*/
-        numero:5,
+        numero:this.num,
       };
     },
     methods:{
