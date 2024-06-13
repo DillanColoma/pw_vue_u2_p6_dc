@@ -3,8 +3,7 @@
 </template>
   
   <script>
-import Pregunta from "./components/Pregunta.vue"; /*[1]*/
-
+import Pregunta from "./components/Pregunta.vue";
 export default {
   name: "App",
   components: {
