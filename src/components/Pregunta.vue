@@ -8,9 +8,9 @@
     <input v-model="pregunta" type="text" placeholder="Hazme una pregunta" />
     <p>Recuerda terminar la pregunta con el signo de interrogación (?)</p>
 
-    <div class="respuesta">
+    <div v-show="mensaje" class="respuesta">
       <h2>{{pregunta}}</h2>
-      <h1>{{ respuesta }}</h1>
+      <h1>{{ respuesta==='yes'?'SI!':'NO!' }}</h1>
     </div>
   </div>
 </template>
@@ -22,12 +22,14 @@ export default {
       /*aqui se declara las propiedades reactivas*/
       pregunta:null,
       respuesta:null,
-      img:null
+      img:null,
+      mensaje:false
     }
   },
   /*Option Api obsevador*/
   watch:{
       pregunta(value,oldvalue){
+        this.mensaje=false;
         /*Primer elemento pongo el value donde me da el valor actual 
         y el segundo argumento el oldvalue que me da el valor antiguo */
         console.log({value,oldvalue});
@@ -37,6 +39,7 @@ export default {
         }
         //Consumir el Api para obtener la respuesta.
         this.obtenerRespuesta();
+        this.mensaje=true;
 
       },
   },
@@ -64,7 +67,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>/*Se garantiza que los estilos solo sean de un solo componente*/ 
 img, .oscuro{
   max-height: 100%;
   height: 100vh;
@@ -107,5 +110,8 @@ p{
 }
 .respuesta{
   margin-top: 125px;
+}
+body{
+  background-color: black;
 }
 </style>
