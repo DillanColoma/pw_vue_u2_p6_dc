@@ -19,19 +19,18 @@ export default {
   data() {
     return {
       mostrar: false,
-      
     };
   },
-  props:{
-    idPokemon:{
-      type:Number,
-      required:true,
+  props: {
+    idPokemon: {
+      type: Number,
+      required: true,
     },
-    mostrarPokemon:{
-      type:Boolean,
-      required:true,
-      default:false,
-    }
+    mostrarPokemon: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   /*Propiedad computada*/
   computed: {
