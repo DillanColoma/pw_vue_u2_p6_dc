@@ -1,71 +1,103 @@
 <template>
-  <h1 v-if="!pokemonCorrecto">Por favor espere..............</h1>
+  <h1 v-if="!pokemonCorrecto">Por favor espere.......</h1>
   <div v-else>
-    <h1>Selecciona el Pokemon Correcto</h1>
+    <h1>Selecciona el Pokemon correcto</h1>
+    <Puntaje :intento="intentoActual" :soluciono="solucionoEnIntento" />
     <PokemonImagen :idPokemon="pokemonCorrecto.id" :mostrarPokemon="mostrar" />
-    <div v-if="!ocultarOpciones">
-      <PokemonOpciones
-        :pokemons="arreglo"
-        @seleccionPokemon="revisarRespuesta($event)"
-      />
-    </div>
-    <div v-else>
-        felicidades seleccionaste el pokemon correcto
-        
+    <PokemonOpciones
+      v-show="!ocultarOpciones"
+      :pokemons="arreglo"
+      @seleccionPokemon="revisarRespuesta($event)"
+    />
+    <div class="mensajes">
+      <div class="final_felicitaciones" v-show="ocultarOpciones">
+        <h2>Felicitaciones el pokemon es {{ pokemonCorrecto.nombre }}</h2>
+        <button class="siguiente" @click="siguientePokemon">Siguiente Pokemon</button>
+      </div>
+      <div class="final_incorrecto"></div>
+      <h2 v-show="!ocultarOpciones && sigaIntentando">
+        <h2>Pokemon incorrecto siga intentando</h2>
+      </h2>
     </div>
   </div>
-  
+  <!-- <div>{{ cargaInicial() }}</div> -->
 </template>
 
 <script>
 import PokemonImagen from "../components/PokemonImagen.vue";
 import PokemonOpciones from "../components/PokemonOpciones.vue";
-import obtenerPokemonsFachada from "../clientes/ClientePokemonAPI";
+import Puntaje from "../components/Puntaje.vue";
+import obtenerPokemonsFachada from "../clientes/ClientePokemonAPI"; /* Solo para funciones */
+
 export default {
-  data() {
-    return {
-      arreglo: [],
-      pokemonCorrecto: null,
-      mostrar: false,
-      ocultarOpciones: false,
-    };
-  },
   components: {
     PokemonImagen,
     PokemonOpciones,
+    Puntaje,
   },
   methods: {
     async cargaInicial() {
-      /*Llamo por primera ves a mi metodo para que me de las opciones*/
       const vectorInicial = await obtenerPokemonsFachada(7);
       this.arreglo = vectorInicial;
 
-      //Selecion aleatoria de cual es el correcto
       const indice = Math.floor(Math.random() * 7);
       this.pokemonCorrecto = this.arreglo[indice];
     },
-
     revisarRespuesta(dato) {
+      this.sumarIntento();
+
       console.log("Se emitio un evento desde el hijo");
       console.log(dato);
 
       if (dato.ident === this.pokemonCorrecto.id) {
         this.mostrar = true;
+        /* Ocultar las otras opciones, y presentar un mensaje que diga felicitaciones y el nombre del pokemon */
         this.ocultarOpciones = true;
+
+        //para el HUB
+        this.solucionoEnIntento = true;
       } else {
-        console.log("Error........");
-        /*Cuando seleccione el pokemon correcto ocultar todas las opciones y que salga
-        felicitaciones a selecionado el pokemon correcto*/
+        console.log("ERRORrr.....");
+        this.sigaIntentando = true;
       }
     },
+    sumarIntento() {
+      this.intentoActual += 1;
+    },
+    async siguientePokemon() {
+      this.arreglo = [];
+      this.mostrar = false;
+      this.ocultarOpciones = false;
+      this.sigaIntentando = false;
+      this.intentoActual = 0;
+      this.solucionoEnIntento = false;
+      await this.cargaInicial();
+    },
   },
-  /*Montar el componente en la pagina web,
-    los metodos del ciclo de vida no necesitan el await */
+  data() {
+    return {
+      arreglo: [],
+      pokemonCorrecto: null,
+      /* llamar: this.cargaInicial(), Esto se puede hacer pero no se recomienda */
+      mostrar: false,
+      ocultarOpciones: false,
+      sigaIntentando: false,
+      intentoActual: 0,
+      solucionoEnIntento: false,
+    };
+  },
   mounted() {
     this.cargaInicial();
-  },
+  } /* se dispara cuando se incia pa pagina web */,
 };
 </script>
 
-<style>
+<style scope>
+.siguiente{
+  border-radius: 15px;
+  background: rgb(112, 109, 109);
+  width: 125px;
+  height: 75px
+  
+}
 </style>

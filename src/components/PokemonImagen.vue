@@ -46,13 +46,18 @@ export default {
   filter: brightness(0);
 }
 img {
-  height: 250px;
+  height: 220px;
   width: 200px;
   position: absolute;
-  right: 37%;
+  /*right: 37%;*/
+  
   /*Se aplica el estilo*/
 }
 .pokemon-container {
-  height: 250px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 </style>
